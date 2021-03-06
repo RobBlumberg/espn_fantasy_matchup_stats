@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "espn_fantasy_matchup_stats"
-version = "0.4.0"
+version = "0.5.0"
 description = "Fantasy Matchup Stats Helper"
 authors = ["RobBlumberg <robertblumberg97@gmail.com>"]
 license = "MIT"
