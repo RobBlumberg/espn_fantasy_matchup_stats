@@ -3,7 +3,17 @@ import pandas as pd
 
 def get_player_stats(team):
     """
+    Determines expected value per game for an espn fantasy team
+    for the following stats:
+    ["PTS", "BLK", "STL", "FG%", "FT%", "REB", "AST", "3PTM", "TO"]
+
+    Arguments:
+    ----------
     team : espn_api Team object
+
+    Returns:
+    --------
+    pd.DataFrame
     """
     stats_df = pd.DataFrame(
         {player.name: player.stats["002021"]["avg"] for player in team.roster}
@@ -19,7 +29,20 @@ def get_player_stats(team):
 
 
 def matchup_comparison(team1, team2):
+    """
+    Compares the expected values per game for two espn fantasy teams
+    for the following stats:
+    ["PTS", "BLK", "STL", "FG%", "FT%", "REB", "AST", "3PTM", "TO"]
 
+    Arguments:
+    ----------
+    team1 : espn_api Team object
+    team2 : espn_api Team object
+
+    Returns:
+    --------
+    pd.DataFrame
+    """
     stats_team1 = get_player_stats(team1)
     stats_team2 = get_player_stats(team2)
 
