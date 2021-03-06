@@ -21,6 +21,7 @@ jobs:
         pip install poetry
         poetry install
     - name: Check style
+      working-directory: ./fantasy_stats
       run: poetry run flake8 --exclude=docs*
     #- name: Test with pytest
     #  run: |
