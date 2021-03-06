@@ -13,9 +13,9 @@ def get_player_stats(team):
     stats_total["FG%"] = stats_total["FGM"] / stats_total["FGA"]
     stats_total["FT%"] = stats_total["FTM"] / stats_total["FTA"]
 
-    keep_stats = ["PTS", "BLK", "STL", "FG%", "FT%", "REB", "AST", "3PTM", "TO"]
+    keep_cols = ["PTS", "BLK", "STL", "FG%", "FT%", "REB", "AST", "3PTM", "TO"]
 
-    return stats_total[keep_stats]
+    return stats_total[keep_cols]
 
 
 def matchup_comparison(team1, team2):
