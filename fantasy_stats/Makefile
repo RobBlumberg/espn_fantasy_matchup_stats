@@ -1,3 +1,10 @@
+.PHONY: init
+init: ## install poetry and dev deps
+	pip install --user poetry
+	poetry install
+	poetry env use python
+	poetry shell
+
 .PHONY: format
 format: ## run code formatters
 	poetry run black .
