@@ -1,1 +1,3 @@
-# espn_fantasy_matchup_stats
+# ESPN Fantasy Matchup Stats Helper
+
+This repo contains scripts to pull statistics for both my team and my opponent's team for my weekly NBA fantasy matchup using the [espn api](https://github.com/cwendt94/espn-api). The purpose of this project is to serve as a learning experience for deployment using AWS lambda. This README will document all the required steps, as well as explain what each component of the code is doing.
