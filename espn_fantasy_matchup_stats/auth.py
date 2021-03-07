@@ -13,7 +13,8 @@ class Auth:
         self.LEAGUE_ID = int(os.environ.get("LEAGUE_ID", "0"))
         self.LEAGUE_YEAR = int(os.environ.get("LEAGUE_YEAR", "0"))
 
-auth=Auth()
+
+auth = Auth()
 
 my_league = League(
     league_id=auth.LEAGUE_ID,
