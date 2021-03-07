@@ -35,7 +35,7 @@ class MyTeam:
         """
         stats_df = pd.DataFrame(
             {
-                player.name: player.stats["002021"]["avg"] 
+                player.name: player.stats["002021"]["avg"]
                 for player in self.team.roster
             }
         ).T
