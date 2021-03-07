@@ -21,17 +21,13 @@ export LEAGUE_YEAR = 2021 | 2020 | 2019
 ### Getting your weekly matchup stats prediction
 ```python
 from espn_fantasy_matchup_stats.auth import my_league
+from espn_fantasy_matchup_stats.my_team import MyTeam  
 from espn_fantasy_matchup_stats.player_stats import matchup_comparison
 
 # Find my team and opponent's team
 my_team_name = "<your_team_name>"
-my_team = next((x for x in my_league.teams if x.team_name == my_team_name), None)
-matchup = my_team.schedule[-1]
-opp_team = (
-    matchup.home_team
-    if matchup.home_team.team_name != my_team_name
-    else matchup.away_team
-)
+my_team = MyTeam(my_league, my_team_name)
+opp_team = my_team.get_opponents_team()
 
 # Get stats
 comparison = matchup_comparison(my_team, opp_team)
