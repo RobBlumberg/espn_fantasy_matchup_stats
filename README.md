@@ -18,7 +18,7 @@ export LEAGUE_ID = <your_league_id>
 export LEAGUE_YEAR = 2021 | 2020 | 2019
 ```
 
-### Instatiate MyTeam object
+### Instantiate MyTeam object
 ```python
 from espn_fantasy_matchup_stats.auth import my_league
 from espn_fantasy_matchup_stats.my_team import MyTeam
