@@ -18,30 +18,19 @@ export LEAGUE_ID = <your_league_id>
 export LEAGUE_YEAR = 2021 | 2020 | 2019
 ```
 
-### Getting your weekly matchup stats prediction
+### Instatiate MyTeam object
 ```python
 from espn_fantasy_matchup_stats.auth import my_league
-from espn_fantasy_matchup_stats.my_team import MyTeam  
-from espn_fantasy_matchup_stats.player_stats import matchup_comparison
+from espn_fantasy_matchup_stats.my_team import MyTeam
 
-# Find my team and opponent's team
+# Instatiate MyTeam object
 my_team_name = "<your_team_name>"
 my_team = MyTeam(my_league, my_team_name)
-opp_team = my_team.get_opponents_team()
+```
 
-# Get stats
-comparison = matchup_comparison(my_team.team, opp_team)
-print(comparison)
-```
-```
-           My Team      Opp Team
-PTS     235.503350    207.420880
-BLK       6.392811      7.484106
-STL      11.360628     13.731366
-FG%       0.470374      0.441689
-FT%       0.772200      0.768535
-REB      77.858028     81.014537
-AST      49.572522     55.806319
-3PTM     28.338662     24.505562
-TO       27.614537     27.989369
-```
+### Useful methods
+Below is a brief overview of some useful methods. For comprehensive documentation, see [docs](TBD).
+- TODO
+
+
+
