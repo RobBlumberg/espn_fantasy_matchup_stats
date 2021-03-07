@@ -7,7 +7,9 @@ class MyTeam:
             x.team_name for x in league.teams
         ], f"{team_name} is not a team in this league."
         self.league = league
-        self.team = next((x for x in league.teams if x.team_name == team_name), None)
+        self.team = next(
+            (x for x in league.teams if x.team_name == team_name), None
+        )
 
     def get_opponents_team(self):
         """
@@ -35,16 +37,16 @@ class MyTeam:
             {player.name: player.stats["002021"]["avg"] for player in self.team.roster}
         ).T
 
-        keep_cols = ["PTS", "BLK", "STL", "FG%", "FT%", "REB", "AST", "3PTM", "TO"]
+        keep = ["PTS", "BLK", "STL", "FG%", "FT%", "REB", "AST", "3PTM", "TO"]
 
         if not total:
-            return stats_df[keep_cols]
+            return stats_df[keep]
         else:
             stats_total = stats_df.sum()
             stats_total["FG%"] = stats_total["FGM"] / stats_total["FGA"]
             stats_total["FT%"] = stats_total["FTM"] / stats_total["FTA"]
 
-            return stats_total[keep_cols]
+            return stats_total[keep]
 
     def get_current_matchup_comparison(self):
         """
