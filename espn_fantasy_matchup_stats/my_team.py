@@ -1,5 +1,4 @@
 class MyTeam:
-
     def __init__(self, league, team_name):
         assert team_name in [x.team_name for x in league]
         self.league = league
