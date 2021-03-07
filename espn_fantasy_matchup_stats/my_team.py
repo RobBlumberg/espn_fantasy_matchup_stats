@@ -1,4 +1,3 @@
-from espn_fantasy_matchup_stats.player_stats import matchup_comparison
 import pandas as pd
 
 
