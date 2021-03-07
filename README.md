@@ -30,7 +30,7 @@ my_team = MyTeam(my_league, my_team_name)
 opp_team = my_team.get_opponents_team()
 
 # Get stats
-comparison = matchup_comparison(my_team, opp_team)
+comparison = matchup_comparison(my_team.team, opp_team)
 print(comparison)
 ```
 ```
