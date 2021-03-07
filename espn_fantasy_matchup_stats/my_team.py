@@ -34,7 +34,10 @@ class MyTeam:
         pd.DataFrame
         """
         stats_df = pd.DataFrame(
-            {player.name: player.stats["002021"]["avg"] for player in self.team.roster}
+            {
+                player.name: player.stats["002021"]["avg"] 
+                for player in self.team.roster
+            }
         ).T
 
         keep = ["PTS", "BLK", "STL", "FG%", "FT%", "REB", "AST", "3PTM", "TO"]
