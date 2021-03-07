@@ -49,3 +49,14 @@ opp_team = (
 comparison = matchup_comparison(my_team, opp_team)
 print(comparison)
 ```
+
+           My Team      Opp Team
+PTS     235.503350    207.420880
+BLK       6.392811      7.484106
+STL      11.360628     13.731366
+FG%       0.470374      0.441689
+FT%       0.772200      0.768535
+REB      77.858028     81.014537
+AST      49.572522     55.806319
+3PTM     28.338662     24.505562
+TO       27.614537     27.989369
