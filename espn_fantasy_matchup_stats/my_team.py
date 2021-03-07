@@ -3,10 +3,10 @@ import pandas as pd
 
 
 class MyTeam:
-
     def __init__(self, league, team_name):
-        assert team_name in [x.team_name for x in league.teams], \
-            f"{team_name} is not a team in this league."
+        assert team_name in [
+            x.team_name for x in league.teams
+        ], f"{team_name} is not a team in this league."
         self.league = league
         self.team = next((x for x in league.teams if x.team_name == team_name), None)
 
@@ -37,7 +37,7 @@ class MyTeam:
         ).T
 
         keep_cols = ["PTS", "BLK", "STL", "FG%", "FT%", "REB", "AST", "3PTM", "TO"]
-        
+
         if not total:
             return stats_df[keep_cols]
         else:
