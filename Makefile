@@ -27,3 +27,7 @@ check_format: ## check for code formatter errors
 	# 	--cov-report annotate:coverage/annotate \
 	# 	--cov=va_framework \
 	# 	tests
+
+.PHONY: jupyter_env
+jupyter_env:
+	python -m ipykernel install --user --name=espn-fantasy-matchup-stats-56bijx1e
