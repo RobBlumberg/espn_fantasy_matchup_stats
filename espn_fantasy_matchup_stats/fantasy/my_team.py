@@ -51,10 +51,7 @@ class MyTeam:
         Returns injury status for entire roster.
         """
 
-        return {
-            player.name: player.injuryStatus
-            for player in self.team.roster
-        }
+        return {player.name: player.injuryStatus for player in self.team.roster}
 
     def daily_player_matches(self, game_date: str):
         """
