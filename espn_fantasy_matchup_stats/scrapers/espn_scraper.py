@@ -7,6 +7,40 @@ import numpy as np
 from typing import Union
 
 
+FANTASY_NAME_TO_SCHEDULE_MAPPER = {
+    "Atlanta": "ATL",
+    "Boston": "BOS",
+    "Brooklyn": "BKN",
+    "Charlotte": "CHA",
+    "Chicago": "CHI",
+    "Cleveland": "CLE",
+    "Dallas": "DAL",
+    "Denver": "DEN",
+    "Detroit": "DET",
+    "Golden State": "GSW",
+    "Houston": "HOU",
+    "Indiana": "IND",
+    "LA": "LAC",
+    "Los Angeles": "LAL",
+    "Memphis": "MEM",
+    "Miami": "MIA",
+    "Milwaukee": "MIL",
+    "Minnesota": "MIN",
+    "New Orleans": "NOP",
+    "New York": "NYK",
+    "Oklahoma City": "OKC",
+    "Orlando": "ORL",
+    "Philadelphia": "PHL",
+    "Phoenix": "PHO",
+    "Portland": "POR",
+    "Sacramento": "SAC",
+    "San Antonio": "SAS",
+    "Toronto": "TOR",
+    "Utah": "UTA",
+    "Washington": "WAS",
+}
+
+
 def get_schedule(day: str, format_: Union[pd.DataFrame, set] = set):
     """
     Return NBA matchups on queried date.
@@ -42,7 +76,7 @@ def get_schedule(day: str, format_: Union[pd.DataFrame, set] = set):
             team = td.find("a", {"class": "team-name"})
 
             try:
-                teams.append(team.span.text)
+                teams.append(FANTASY_NAME_TO_SCHEDULE_MAPPER[team.span.text])
             except AttributeError:
                 pass
 
