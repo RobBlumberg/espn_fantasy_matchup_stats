@@ -1,11 +1,10 @@
-from bs4 import BeautifulSoup
-import requests
 import time
-import pandas as pd
-import numpy as np
-
 from typing import Union
 
+import numpy as np
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
 
 FANTASY_NAME_TO_SCHEDULE_MAPPER = {
     "Atlanta": "ATL",
@@ -83,6 +82,9 @@ def get_schedule(day: str, format_: Union[pd.DataFrame, set] = set):
         all_games.append(teams)
 
     # sleep to avoid too many requests
+    time.sleep(1)
+
+    # returns
     if format_ == pd.DataFrame:
         return pd.DataFrame(all_games)
     elif format_ == set:
