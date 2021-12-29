@@ -1,17 +1,32 @@
 from bs4 import BeautifulSoup
 import requests
+import time
+import pandas as pd
+import numpy as np
+
+from typing import Union
 
 
-def get_schedule(day: str):
+def get_schedule(day: str, format_: Union[pd.DataFrame, set] = set):
     """
     Return NBA matchups on queried date.
+
+    Arguments:
+    ----------
+    day: str
+        Date for which to get schedule.
+        Format  = YYYY-MM-DD
+    format_: Union[pd.DataFrame, set] (default=set)
+        Must be either pd.DataFrame or set.
     """
+    msg = "format_ must be either 'pd.DataFrame' or 'set'."
+    assert format_ in {pd.DataFrame, set}, msg
 
     day = day.replace("-", "")
     url = f"https://www.espn.com/nba/schedule/_/date/{day}"
 
     response = requests.get(url)
-    bs = BeautifulSoup(response.text)
+    bs = BeautifulSoup(response.text, "html.parser")
 
     # find matchup schedule tables
     matchup_table = bs.find(
@@ -33,4 +48,8 @@ def get_schedule(day: str):
 
         all_games.append(teams)
 
-    return all_games
+    # sleep to avoid too many requests
+    if format_ == pd.DataFrame:
+        return pd.DataFrame(all_games)
+    elif format_ == set:
+        return set(np.array(all_games).flatten())
