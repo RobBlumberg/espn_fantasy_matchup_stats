@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from datetime import date
+from datetime import timedelta
+from functools import reduce
 
 from espn_fantasy_matchup_stats.scrapers.espn_scraper import get_schedule
 
@@ -54,6 +56,7 @@ class MyTeam:
         }
 
     def daily_player_matches(self, game_date):
+        # TODO: make game_date datetime.date
 
         s = get_schedule(game_date)
 
@@ -97,13 +100,14 @@ class MyTeam:
         Returns projected player stats for queried date by checking injury status.
         Projections are estimated using the specified stat_type.
         """
+        # TODO: make game_date datetime.date
 
         date_now = datetime.date(datetime.now())
         game_datetime = date.fromisoformat(game_date)
 
         days_diff = np.abs((date_now - game_datetime).days)
 
-        # if queried day is less than 1 day from now, projected stats for DTD players is set to 0
+        # if queried game_date is more than 1 day from now, DTD player is considered ACTIVE
         injury_status = self.get_injury_status()
         if days_diff > 1:
             for key in injury_status:
@@ -118,38 +122,53 @@ class MyTeam:
 
         # map daily schedule to player stats
         schedule = self.daily_player_matches(game_date)
-        stats_df["is_playing"] = stats_df.index.map(schedule)
+        stats_df["has_game"] = stats_df.index.map(schedule)
 
         # if injury_status is not ACTIVE or player does not have game, set all projected stats to 0
         for idx, row in stats_df.iterrows():
-            if row["injury_status"] != "ACTIVE" or not row["is_playing"]:
+            if row["injury_status"] != "ACTIVE" or not row["has_game"]:
                 stats_df.loc[idx, "PTS":"TO"] = np.zeros(stats_df.shape[1] - 2)
 
         return stats_df
 
-    def get_current_matchup_comparison(self, game_date: str, stat_type: str = "total"):
+    def get_matchup_comparison(
+        self, start_date: date, end_date: date, stat_type: str = "total"
+    ):
         """
-        Compares the projected stats between team and current opponent on the specified game_date,
+        Compares the projected stats between team and current opponent for the specified date range,
         using the specified stat_type.
 
         Returns:
         --------
         pd.DataFrame
         """
-        stats_my_team = self.get_daily_projected_stats(game_date, stat_type=stat_type)
-        opp_team = self.get_opponents_team()
-        stats_opp_team = opp_team.get_daily_projected_stats(
-            game_date, stat_type=stat_type
-        )
+        daily_comparisons = []
+        for game_date in [
+            start_date + timedelta(i) for i in range((end_date - start_date).days + 1)
+        ]:
 
-        team_stats_sum_list = []
-        for team_stats in [stats_my_team, stats_opp_team]:
-            team_stats_sum = team_stats.sum()
-            team_stats_sum["FG%"] = team_stats_sum["FGM"] / team_stats_sum["FGA"]
-            team_stats_sum["FT%"] = team_stats_sum["FTM"] / team_stats_sum["FTA"]
-            team_stats_sum_list.append(team_stats_sum)
+            stats_my_team = self.get_daily_projected_stats(
+                str(game_date), stat_type=stat_type
+            )
+            opp_team = self.get_opponents_team()
+            stats_opp_team = opp_team.get_daily_projected_stats(
+                str(game_date), stat_type=stat_type
+            )
 
-        match_stats = pd.concat(team_stats_sum_list, axis=1)
-        match_stats.columns = [self.team.team_name, opp_team.team.team_name]
+            team_stats_sum_list = []
+            for team_stats in [stats_my_team, stats_opp_team]:
+                team_stats_sum = team_stats.sum()
+                team_stats_sum_list.append(team_stats_sum)
 
-        return match_stats.drop("injury_status")
+            match_stats = pd.concat(team_stats_sum_list, axis=1)
+            match_stats.columns = [self.team.team_name, opp_team.team.team_name]
+
+            match_stats.drop("injury_status")
+
+            daily_comparisons.append(match_stats)
+
+        dfs_agg = reduce(lambda x, y: x.add(y, fill_value=0), daily_comparisons)
+        dfs_agg.loc["FG%"] = dfs_agg.loc["FGM"] / dfs_agg.loc["FGA"]
+        dfs_agg.loc["FT%"] = dfs_agg.loc["FTM"] / dfs_agg.loc["FTA"]
+
+        return dfs_agg.drop(["injury_status", "has_game"])
