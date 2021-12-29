@@ -52,11 +52,19 @@ class MyTeam:
         """
 
         return {
-            self.team.roster[i].name: self.team.roster[i].injuryStatus
-            for i in range(len(self.team.roster))
+            player.name: player.injuryStatus
+            for player in self.team.roster
         }
 
-    def daily_player_matches(self, game_date):
+    def daily_player_matches(self, game_date: str):
+        """
+        Produce dict which indicates if each player on roster has a
+        game on the queried game_date.
+
+        Return:
+        -------
+        game_date: dict[str, bool]
+        """
         # TODO: make game_date datetime.date
 
         s = get_schedule(game_date)
