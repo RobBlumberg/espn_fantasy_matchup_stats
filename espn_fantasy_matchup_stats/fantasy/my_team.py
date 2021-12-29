@@ -3,6 +3,8 @@ import numpy as np
 from datetime import datetime
 from datetime import date
 
+from espn_fantasy_matchup_stats.scrapers.espn_scraper import get_schedule
+
 
 class MyTeam:
 
@@ -51,6 +53,12 @@ class MyTeam:
             for i in range(len(self.team.roster))
         }
 
+    def daily_player_matches(self, game_date):
+
+        s = get_schedule(game_date)
+
+        return {player.name: player.proTeam in s for player in self.team.roster}
+
     def get_player_stats(self, stat_type: str = "total"):
         """
         Returns player average stats using the specified stat_type.
@@ -91,9 +99,9 @@ class MyTeam:
         """
 
         date_now = datetime.date(datetime.now())
-        game_date = date.fromisoformat(game_date)
+        game_datetime = date.fromisoformat(game_date)
 
-        days_diff = np.abs((date_now - game_date).days)
+        days_diff = np.abs((date_now - game_datetime).days)
 
         # if queried day is less than 1 day from now, projected stats for DTD players is set to 0
         injury_status = self.get_injury_status()
@@ -108,10 +116,14 @@ class MyTeam:
         stats_df = self.get_player_stats(stat_type=stat_type)
         stats_df["injury_status"] = stats_df.index.map(injury_status)
 
-        # if injury_status is not ACTIVE, set all projected stats to 0
+        # map daily schedule to player stats
+        schedule = self.daily_player_matches(game_date)
+        stats_df["is_playing"] = stats_df.index.map(schedule)
+
+        # if injury_status is not ACTIVE or player does not have game, set all projected stats to 0
         for idx, row in stats_df.iterrows():
-            if row["injury_status"] != "ACTIVE":
-                stats_df.loc[idx, "PTS":"TO"] = np.zeros(stats_df.shape[1] - 1)
+            if row["injury_status"] != "ACTIVE" or not row["is_playing"]:
+                stats_df.loc[idx, "PTS":"TO"] = np.zeros(stats_df.shape[1] - 2)
 
         return stats_df
 
