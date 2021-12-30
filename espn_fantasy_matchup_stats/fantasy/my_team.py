@@ -137,8 +137,9 @@ class MyTeam:
 
         return stats_df
 
-    def get_matchup_comparison(
-        self, start_date: date, end_date: date, stat_type: str = "total"
+    @staticmethod
+    def matchup_comparison(
+        team1, team2, start_date: date, end_date: date, stat_type: str = "total"
     ):
         """
         Compares the projected stats between team and current opponent for the specified date range,
@@ -153,21 +154,20 @@ class MyTeam:
             start_date + timedelta(i) for i in range((end_date - start_date).days + 1)
         ]:
 
-            stats_my_team = self.get_daily_projected_stats(
+            stats_team1 = team1.get_daily_projected_stats(
                 str(game_date), stat_type=stat_type
             )
-            opp_team = self.get_opponents_team()
-            stats_opp_team = opp_team.get_daily_projected_stats(
+            stats_team2 = team2.get_daily_projected_stats(
                 str(game_date), stat_type=stat_type
             )
 
             team_stats_sum_list = []
-            for team_stats in [stats_my_team, stats_opp_team]:
+            for team_stats in [stats_team1, stats_team2]:
                 team_stats_sum = team_stats.sum()
                 team_stats_sum_list.append(team_stats_sum)
 
             match_stats = pd.concat(team_stats_sum_list, axis=1)
-            match_stats.columns = [self.team.team_name, opp_team.team.team_name]
+            match_stats.columns = [team1.team.team_name, team2.team.team_name]
 
             match_stats.drop("injury_status")
 
