@@ -58,12 +58,12 @@ class MyTeam:
         Produce dict which indicates if each player on roster has a
         game on the queried game_date.
 
+        TODO: make game_date argument datetime.date
+
         Return:
         -------
         game_date: dict[str, bool]
         """
-        # TODO: make game_date datetime.date
-
         s = get_schedule(game_date)
 
         return {player.name: player.proTeam in s for player in self.team.roster}
@@ -103,14 +103,20 @@ class MyTeam:
 
     def get_daily_projected_stats(self, game_date, stat_type: str = "total"):
         """
-        Returns projected player stats for queried date by checking injury status.
+        Returns projected player stats for queried date, taking into account
+        injury status and schedule (ie. whether the player is playing or not).
         Projections are estimated using the specified stat_type.
-        """
-        # TODO: make game_date datetime.date
 
+        Note: A player is considered injured on a given date if his current
+        injury status is different from ACTIVE.
+        The exception is that if a player's status is DAY-TO-DAY,
+        the player is considered to be ACTIVE 2 days from the current date.
+
+        TODO: make game_date argument datetime.date
+        """
+        # get number of days between now and queried game_date
         date_now = datetime.date(datetime.now())
         game_datetime = date.fromisoformat(game_date)
-
         days_diff = np.abs((date_now - game_datetime).days)
 
         # if queried game_date is more than 1 day from now, DTD player is considered ACTIVE
@@ -133,6 +139,7 @@ class MyTeam:
         # if injury_status is not ACTIVE or player does not have game, set all projected stats to 0
         for idx, row in stats_df.iterrows():
             if row["injury_status"] != "ACTIVE" or not row["has_game"]:
+                # TODO: make this more scalable
                 stats_df.loc[idx, "PTS":"TO"] = np.zeros(stats_df.shape[1] - 2)
 
         return stats_df
@@ -142,7 +149,7 @@ class MyTeam:
         team1, team2, start_date: date, end_date: date, stat_type: str = "total"
     ):
         """
-        Compares the projected stats between team and current opponent for the specified date range,
+        Compares the projected stats between specified teams for the specified date range,
         using the specified stat_type.
 
         Returns:
