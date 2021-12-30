@@ -14,6 +14,11 @@ format: ## run code formatters
 check_format: ## check for code formatter errors
 	poetry run flake8
 
+.PHONY: version
+version:
+	bump2version setup.cfg --new-version $(new-version)
+
+
 #.PHONY: test
 #test: ## run test suite
 #	poetry run python -m pytest -vv tests
