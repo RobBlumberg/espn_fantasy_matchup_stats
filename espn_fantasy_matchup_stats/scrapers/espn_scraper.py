@@ -81,9 +81,6 @@ def get_schedule(day: str, format_: Union[pd.DataFrame, set] = set):
 
         all_games.append(teams)
 
-    # sleep to avoid too many requests
-    time.sleep(1)
-
     # returns
     if format_ == pd.DataFrame:
         return pd.DataFrame(all_games)
